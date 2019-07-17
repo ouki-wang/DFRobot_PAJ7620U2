@@ -47,106 +47,68 @@ int DFRobot_PAJ7620U2::configGesture(uint8_t gesture)
 {
   _configuredGesture = gesture;
 }
+void DFRobot_PAJ7620U2::setGestureHighRate(bool b)
+{
+  _gestureHighRate  = b;
+}
 
 DFRobot_PAJ7620U2::eGesture_t DFRobot_PAJ7620U2::getGesture(void)
 {
-  readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);  // Read Bank_0_Reg_0x43/0x44 for gesture result.
-  if ((_gesture != 0xFF) && (_gesture & _configuredGesture)){
-    switch (_gesture)   // When different gestures be detected, the variable '_gesture' will be set to different 
-    {
-      case eGestureRight:
-        /*if(_configuredGesture & (eForward|eBackward)){
-          delay(GES_ENTRY_TIME);
-          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);
-          if((_configuredGesture & eForward) && (_gesture == eForward)){
-            DBG("Right-Forward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else if((_configuredGesture & eBackward) && (_gesture == eBackward)){
-            DBG("Right-Backward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else{
-            _gesture = eRight;
-            DBG("Right Event Detected");
-          }
-        }else*/{
+   readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_1, &_gesture, 1);
+  _gesture <<= 8;
+  if (_gesture == eGestureWave){
+    DBG("Wave1 Event Detected");
+    delay(GES_QUIT_TIME);
+  }else{
+    if(!_gestureHighRate){
+      delay(GES_ENTRY_TIME);
+    }
+    readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);  // Read Bank_0_Reg_0x43/0x44 for gesture result.
+    if ( _gesture != 0 ){
+      switch (_gesture)   // When different gestures be detected, the variable '_gesture' will be set to different 
+      {
+        case eGestureRight:
           DBG("Right Event Detected");
-        }
         break;
-
-      case eGestureLeft: 
-        /*if(_configuredGesture & (eForward|eBackward)){
-          delay(GES_ENTRY_TIME);
-          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);
-          if((_configuredGesture & eForward) && (_gesture == eForward)){
-            DBG("Left-Forward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else if((_configuredGesture & eBackward) && (_gesture == eBackward)){
-            DBG("Left-Backward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else{
-            _gesture = eLeft;
-            DBG("Left Event Detected");
-          }
-        }else*/{
+    
+        case eGestureLeft: 
           DBG("Left Event Detected");
-        }
         break;
-      case eGestureUp:
-        /*if(_configuredGesture & (eForward|eBackward)){
-          delay(GES_ENTRY_TIME);
-          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);
-          if((_configuredGesture & eForward) && (_gesture == eForward)){
-            DBG("Up-Forward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else if((_configuredGesture & eBackward) && (_gesture == eBackward)){
-            DBG("Up-Backward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else{
-            _gesture = eUp;
-            DBG("Up Event Detected");
-          }
-        }else*/{
+    
+        case eGestureUp:
           DBG("Up Event Detected");
-        }
         break;
-      case eGestureDown:
-        /*if(_configuredGesture & (eForward|eBackward)){
-          delay(GES_ENTRY_TIME);
-          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);
-          if((_configuredGesture & eForward) && (_gesture == eForward)){
-            DBG("Down-Forward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else if((_configuredGesture & eBackward) && (_gesture == eBackward)){
-            DBG("Down-Backward Event Detected");
-            delay(GES_QUIT_TIME);
-          }else{
-            _gesture = eDown;
-            DBG("Down Event Detected");
-          }
-        }else*/{
+    
+        case eGestureDown:
           DBG("Down Event Detected");
+        break;
+    
+        case eGestureForward:
+          DBG("Forward Event Detected");
+          delay(GES_QUIT_TIME);
+          break;
+    
+        case eGestureBackward:
+          DBG("Backward Event Detected");
+          delay(GES_QUIT_TIME);
+          break;
+    
+        case eGestureClockwise:
+          DBG("Clockwise Event Detected");
+          break;
+    
+        case eGestureAntiClockwise:
+          DBG("anti-clockwise Event Detected");
+          break;
+    
+        default:
+          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_1, &_gesture, 1);
+          _gesture <<= 8;
+          if (_gesture == eGestureWave){
+            DBG("Wave2 Event Detected");
+          }
+          break;
         }
-        break;
-      case eGestureForward:
-        DBG("Forward Event Detected");
-        delay(GES_QUIT_TIME);
-        break;
-      case eGestureBackward:
-        DBG("Backward Event Detected");
-        delay(GES_QUIT_TIME);
-        break;
-      case eGestureClockwise:
-        DBG("Clockwise Event Detected");
-        break;
-      case eGestureAntiClockwise:
-        DBG("anti-clockwise Event Detected");
-        break;
-      default:
-        readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_1, &_gesture, 1);
-        if (_gesture == eGestureWave){
-          DBG("Wave Event Detected");
-        }
-        break;
     }
   }
   return _gesture;

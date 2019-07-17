@@ -3,8 +3,8 @@
  * @brief 定义DFRobot_PAJ7620手势识别传感器类的基础结构
  * @n The PAC7620 integrates gesture recognition function with general I2C interface into a single chip forming an image analytic sensor system. It can recognize 9 human hand gesticulations such as moving up, down, left, right, forward, backward, circle-clockwise, circle-counter Key Parameters clockwise, and waving. It also offers built-in proximity detection in sensing approaching or departing object from the sensor. The PAC7620 is designed with great flexibility in power-saving mechanism, well suit for low power battery operated HMI devices. The PAJ7620 is packaged into module form in-built with IR LED and optics lens as a complete sensor solution
  
- * @copyright	[DFRobot](http://www.dfrobot.com), 2016
- * @copyright	GNU Lesser General Public License
+ * @copyright	Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @licence     The MIT License (MIT)
  * @author [Ouki](ouki.wang@dfrobot.com)
  * @version  V1.0
  * @date  2019-07-16
@@ -96,7 +96,7 @@ public:
     eGestureClockwise = 0x01<<6, /**< 顺时针运动探测 */
     eGestureAntiClockwise = 0x01<<7, /**< 逆时针运动探测 */
     eGestureWave = 0x01<<8,          /**< 挥手运动探测 */
-    eGestureAll = 0x1ff             /**< 支持所有动作，无实际意义，用于写程序抽象逻辑*/
+    eGestureAll = 0xff             /**< 支持所有动作，无实际意义，用于写程序抽象逻辑*/
   }eGesture_t;
   
   typedef enum {
@@ -127,7 +127,7 @@ public:
    */
   int configGesture(uint8_t val);
   int setNormalOrGaming(eRateMode_t mode);
-  
+  void setGestureHighRate(bool b);
   /**
    * @brief 获取手势
    * @return 返回手势
@@ -162,6 +162,7 @@ private:
 private:
   TwoWire *_pWire;
   const uint8_t _deviceAddr = PAJ7620_IIC_ADDR;
+  bool _gestureHighRate = true;
   eGesture_t _gesture;
   uint8_t _configuredGesture=(uint8_t)eGestureAll;
 
