@@ -7,8 +7,8 @@
  * @licence     The MIT License (MIT)
  * @author [ouki](ouki.wang@dfrobot.com)
  * @version  V1.0
- * @date  2016-10-13
- * @https://github.com/DFRobot/DFRobot_PAJ7620
+ * @date  2019-07-16
+ * @https://github.com/DFRobot/DFRobot_PAJ7620U2
  */
  
 #include <DFRobot_PAJ7620U2.h>
@@ -29,7 +29,12 @@ void setup()
 
 void loop()
 {
-  DFRobot_PAJ7620U2::eGesture_t ges = paj.getGesture();
-  if(ges != paj.eGestureNone )
-    DBG(ges);
+  DFRobot_PAJ7620U2::eGesture_t gesture = paj.getGesture();
+  if(gesture != paj.eGestureNone ){
+    String description  = paj.gestureDescription(gesture);
+    Serial.println("--------------Gesture Recognition System---------------------------");
+    Serial.print("gesture code        = ");Serial.println(gesture);
+    Serial.print("gesture description  = ");Serial.println(description);
+    Serial.println();
+  }
 }

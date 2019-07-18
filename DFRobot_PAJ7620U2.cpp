@@ -38,9 +38,19 @@ int DFRobot_PAJ7620U2::begin(void)
   return ERR_OK;
 }
 
-int DFRobot_PAJ7620U2::setNormalOrGaming(eRateMode_t mode)
+int DFRobot_PAJ7620U2::setNormalOrGamingMode(eRateMode_t mode)
 {
 
+}
+
+String DFRobot_PAJ7620U2::gestureDescription(eGesture_t gesture)
+{
+    for(int i=0;i<sizeof(gestureDescriptions);i++){
+        if(gesture == gestureDescriptions[i].gesture){
+          return gestureDescriptions[i].description;
+        }
+    }
+    return "";
 }
 
 int DFRobot_PAJ7620U2::configGesture(uint8_t gesture)
@@ -153,6 +163,19 @@ uint8_t DFRobot_PAJ7620U2::readReg(uint8_t reg, void* pBuf,size_t size)
   _pWire->endTransmission();
   return size;
 }
+
+const DFRobot_PAJ7620U2::sGestureDescription_t DFRobot_PAJ7620U2::gestureDescriptions[]={
+  {eGestureNone, "None"},
+  {eGestureRight, "Right"},
+  {eGestureLeft, "Left"},
+  {eGestureUp, "Up"},
+  {eGestureDown, "Down"},
+  {eGestureForward, "Forward"},
+  {eGestureBackward, "Backward"},
+  {eGestureClockwise, "Clockwise"},
+  {eGestureAntiClockwise, "Anti-Clockwise"},
+  {eGestureWave, "Wave"}
+};
 
 const uint8_t /*PROGMEM*/ DFRobot_PAJ7620U2::initRegisterArray[219][2] = {
     {0xEF,0x00},

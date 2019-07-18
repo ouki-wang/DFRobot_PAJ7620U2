@@ -18,7 +18,7 @@
 #include <Wire.h>
 
 //打开这个宏，可以看到程序的详细运行过程
-#define ENABLE_DBG
+//#define ENABLE_DBG
 
 #ifdef ENABLE_DBG
 #define DBG(...) {Serial.print("[");Serial.print(__FUNCTION__); Serial.print("(): "); Serial.print(__LINE__); Serial.print(" ] "); Serial.println(__VA_ARGS__);}
@@ -81,7 +81,6 @@ public:
   #define ERR_OK             0      //无错误
   #define ERR_DATA_BUS      -1      //数据总线错误
   #define ERR_IC_VERSION    -2      //芯片版本不匹配
-  
   /*
    这里从数据手册上抄写关于这个寄存器的描述
   */
@@ -108,6 +107,12 @@ public:
     eNormalRate = 0,
     eGamingRage,
   }eRateMode_t;
+
+  typedef struct{
+    eGesture_t gesture;
+    const char * description;
+  }sGestureDescription_t;
+
 public:
   /**
    * @brief 构造函数
@@ -126,8 +131,9 @@ public:
    * @return 返回0表示配置成功，返回其他值表示配置失败
    */
   int configGesture(uint8_t val);
-  int setNormalOrGaming(eRateMode_t mode);
+  int setNormalOrGamingMode(eRateMode_t mode);
   void setGestureHighRate(bool b);
+  String gestureDescription(eGesture_t gesture);
   /**
    * @brief 获取手势
    * @return 返回手势
@@ -159,6 +165,7 @@ private:
    */
   uint8_t readReg(uint8_t reg, void* pBuf, size_t size);
   static const uint8_t /*PROGMEM*/ initRegisterArray[219][2];
+  static const sGestureDescription_t gestureDescriptions[10];
 private:
   TwoWire *_pWire;
   const uint8_t _deviceAddr = PAJ7620_IIC_ADDR;
