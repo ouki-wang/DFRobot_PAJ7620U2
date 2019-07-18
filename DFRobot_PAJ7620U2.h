@@ -72,8 +72,8 @@
 #define PAJ7620_DISABLE	0x00
 
 #define GES_REACTION_TIME		50	// You can adjust the reaction time according to the actual circumstance.
-#define GES_ENTRY_TIME			500	// When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s). 
-#define GES_QUIT_TIME			200
+#define GES_ENTRY_TIME			2000	// When you want to recognize the Forward/Backward gestures, your gestures' reaction time must less than GES_ENTRY_TIME(0.8s). 
+#define GES_QUIT_TIME			1000
 
 class DFRobot_PAJ7620U2
 {
@@ -85,7 +85,7 @@ public:
    这里从数据手册上抄写关于这个寄存器的描述
   */
   typedef enum{
-    eGestureNone = 0x00,    /**< 未探测到任何动作 */
+    eGestureNone = 0x00, /**< 未探测到任何动作 */
     eGestureRight = 0x01<<0, /**< 从左向右运动探测 */
     eGestureLeft  = 0x01<<1, /**< 从右向左运动探测 */
     eGestureUp    = 0x01<<2, /**< 从下向上运动探测 */
@@ -94,8 +94,12 @@ public:
     eGestureBackward  = 0x01<<5, /**< 从近到远运动探测 */
     eGestureClockwise = 0x01<<6, /**< 顺时针运动探测 */
     eGestureAntiClockwise = 0x01<<7, /**< 逆时针运动探测 */
-    eGestureWave = 0x01<<8,          /**< 挥手运动探测 */
-    eGestureAll = 0xff             /**< 支持所有动作，无实际意义，用于写程序抽象逻辑*/
+    eGestureWave = 0x01<<8, /**< 快速挥手运动探测 */
+    eGestureWaveSlowlyDisorder = 0x01<<9, /**< 乱序挥手运动探测 */
+    eGestureWaveSlowlyLeftRight = eGestureLeft + eGestureRight, /**< 左右慢速挥手运动探测 */
+    eGestureWaveSlowlyUpDown = eGestureUp + eGestureDown, /**< 上下慢速挥手运动探测 */
+    eGestureWaveSlowlyForwardBackward = eGestureForward + eGestureBackward, /**< 前后慢速挥手运动探测 */
+    eGestureAll = 0xff /**< 支持所有动作，无实际意义，用于写程序抽象逻辑*/
   }eGesture_t;
   
   typedef enum {
@@ -126,11 +130,6 @@ public:
    */
   int begin(void);
 
-  /**
-   * @brief 配置用户想要识别的手势，减少要识别的手势个数，可以提高识别效率，提高识别精度
-   * @return 返回0表示配置成功，返回其他值表示配置失败
-   */
-  int configGesture(uint8_t val);
   int setNormalOrGamingMode(eRateMode_t mode);
   void setGestureHighRate(bool b);
   String gestureDescription(eGesture_t gesture);
@@ -164,15 +163,20 @@ private:
    * @return 返回实际读取的长度，返回0表示读取失败
    */
   uint8_t readReg(uint8_t reg, void* pBuf, size_t size);
-  static const uint8_t /*PROGMEM*/ initRegisterArray[219][2];
-  static const sGestureDescription_t gestureDescriptions[10];
-private:
-  TwoWire *_pWire;
-  const uint8_t _deviceAddr = PAJ7620_IIC_ADDR;
-  bool _gestureHighRate = true;
-  eGesture_t _gesture;
-  uint8_t _configuredGesture=(uint8_t)eGestureAll;
 
+private:
+  /*! _pWire是应用程序传过来的 TwoWire类指针 */ 
+  TwoWire *_pWire;
+  /*! 初始化配置表 */
+  static const uint8_t /*PROGMEM*/ initRegisterArray[219][2]; 
+  /*! 描述的手势编码和手势字符串描述对应表 */
+  static const sGestureDescription_t /*PROGMEM*/ gestureDescriptionsTable[14]; 
+  /*! PAJ7620U2的IIC地址，不可修改*/
+  const uint8_t _deviceAddr = PAJ7620_IIC_ADDR;
+  /*! 是否配置为高速识别模式 详细信息解释详见setGestureHighRate方法*/
+  bool _gestureHighRate = true;
+  /*! 当前手势*/  
+  eGesture_t _gesture;
 };
 
 #endif

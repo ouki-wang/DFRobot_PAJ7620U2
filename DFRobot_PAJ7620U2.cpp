@@ -45,18 +45,14 @@ int DFRobot_PAJ7620U2::setNormalOrGamingMode(eRateMode_t mode)
 
 String DFRobot_PAJ7620U2::gestureDescription(eGesture_t gesture)
 {
-    for(int i=0;i<sizeof(gestureDescriptions);i++){
-        if(gesture == gestureDescriptions[i].gesture){
-          return gestureDescriptions[i].description;
+    for(int i=0;i<sizeof(gestureDescriptionsTable)/sizeof(gestureDescriptionsTable[0]);i++){
+        if(gesture == gestureDescriptionsTable[i].gesture){
+          return gestureDescriptionsTable[i].description;
         }
     }
     return "";
 }
 
-int DFRobot_PAJ7620U2::configGesture(uint8_t gesture)
-{
-  _configuredGesture = gesture;
-}
 void DFRobot_PAJ7620U2::setGestureHighRate(bool b)
 {
   _gestureHighRate  = b;
@@ -70,11 +66,19 @@ DFRobot_PAJ7620U2::eGesture_t DFRobot_PAJ7620U2::getGesture(void)
     DBG("Wave1 Event Detected");
     delay(GES_QUIT_TIME);
   }else{
-    if(!_gestureHighRate){
-      delay(GES_ENTRY_TIME);
-    }
+    _gesture = eGestureNone;
     readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &_gesture, 1);  // Read Bank_0_Reg_0x43/0x44 for gesture result.
-    if ( _gesture != 0 ){
+    _gesture &= 0x00ff;
+    if(!_gestureHighRate){
+      uint8_t tmp;
+      delay(GES_ENTRY_TIME);
+      readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_0, &tmp, 1);
+      DBG("tmp=0x");DBG(tmp,HEX);
+      DBG("_gesture=0x");DBG(_gesture,HEX);
+      _gesture |= tmp;
+    }
+    if (_gesture != eGestureNone){
+      DBG("");
       switch (_gesture)   // When different gestures be detected, the variable '_gesture' will be set to different 
       {
         case eGestureRight:
@@ -95,12 +99,20 @@ DFRobot_PAJ7620U2::eGesture_t DFRobot_PAJ7620U2::getGesture(void)
     
         case eGestureForward:
           DBG("Forward Event Detected");
-          delay(GES_QUIT_TIME);
+          if(!_gestureHighRate){
+            delay(GES_QUIT_TIME);
+          }else{
+            delay(GES_QUIT_TIME/5);
+          }
           break;
     
         case eGestureBackward:
           DBG("Backward Event Detected");
-          delay(GES_QUIT_TIME);
+          if(!_gestureHighRate){
+            delay(GES_QUIT_TIME);
+          }else{
+            delay(GES_QUIT_TIME/5);
+          }
           break;
     
         case eGestureClockwise:
@@ -110,12 +122,29 @@ DFRobot_PAJ7620U2::eGesture_t DFRobot_PAJ7620U2::getGesture(void)
         case eGestureAntiClockwise:
           DBG("anti-clockwise Event Detected");
           break;
-    
         default:
-          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_1, &_gesture, 1);
-          _gesture <<= 8;
-          if (_gesture == eGestureWave){
+          uint8_t tmp;
+          readReg(PAJ7620_ADDR_GES_PS_DET_FLAG_1, &tmp, 1);
+          if(tmp){
+            _gesture = eGestureWave;
             DBG("Wave2 Event Detected");
+          }else{
+            switch(_gesture)
+            {
+            case eGestureWaveSlowlyLeftRight:
+              DBG("LeftRight Wave Event Detected");
+              break;
+            case eGestureWaveSlowlyUpDown:
+              DBG("UpDown Wave Event Detected");
+              break;
+            case eGestureWaveSlowlyForwardBackward:
+              DBG("ForwardBackward Wave Event Detected");
+              break;
+            default:
+              _gesture = eGestureWaveSlowlyDisorder;
+              DBG("Wave Disorder Event Detected");
+              break;
+            }
           }
           break;
         }
@@ -164,7 +193,7 @@ uint8_t DFRobot_PAJ7620U2::readReg(uint8_t reg, void* pBuf,size_t size)
   return size;
 }
 
-const DFRobot_PAJ7620U2::sGestureDescription_t DFRobot_PAJ7620U2::gestureDescriptions[]={
+const DFRobot_PAJ7620U2::sGestureDescription_t DFRobot_PAJ7620U2::gestureDescriptionsTable[]={
   {eGestureNone, "None"},
   {eGestureRight, "Right"},
   {eGestureLeft, "Left"},
@@ -174,7 +203,11 @@ const DFRobot_PAJ7620U2::sGestureDescription_t DFRobot_PAJ7620U2::gestureDescrip
   {eGestureBackward, "Backward"},
   {eGestureClockwise, "Clockwise"},
   {eGestureAntiClockwise, "Anti-Clockwise"},
-  {eGestureWave, "Wave"}
+  {eGestureWave, "Wave"},
+  {eGestureWaveSlowlyDisorder, "WaveSlowlyDisorder"},
+  {eGestureWaveSlowlyLeftRight, "WaveSlowlyLeftRight"},
+  {eGestureWaveSlowlyUpDown, "WaveSlowlyUpDown"},
+  {eGestureWaveSlowlyForwardBackward, "WaveSlowlyForwardBackward"}
 };
 
 const uint8_t /*PROGMEM*/ DFRobot_PAJ7620U2::initRegisterArray[219][2] = {
