@@ -34,9 +34,9 @@
 #define PAJ7620_REGITER_BANK_SEL  (0xEF)	//W
 
 // REGISTER BANK 0
-#define PAJ7620_ADDR_PART_ID_LOW		0x00
-#define PAJ7620_ADDR_PART_ID_HIGH		0x01
-#define PAJ7620_ADDR_VERSION_ID			0x01
+#define PAJ7620_ADDR_PART_ID_LOW		0x00	//R
+#define PAJ7620_ADDR_PART_ID_HIGH		0x01	//R
+#define PAJ7620_ADDR_VERSION_ID			0x01	//R
 #define PAJ7620_ADDR_SUSPEND_CMD		0x03	//W
 #define PAJ7620_ADDR_GES_PS_DET_MASK_0	0x41	//RW
 #define PAJ7620_ADDR_GES_PS_DET_MASK_1	0x42	//RW
@@ -103,18 +103,18 @@ public:
   }eGesture_t;
   
   typedef enum {
-    eBank0 = 0,
-    eBank1 = 1,
+    eBank0 = 0, /**< 某些寄存器定义位于Bank0*/
+    eBank1 = 1, /**< 某些寄存器定义位于Bank1*/
   }eBank_t;
   
   typedef enum {
-    eNormalRate = 0,
-    eGamingRage,
+    eNormalRate = 0, /**< Gesture Update Rate is 120HZ, Gesture speed is 60°/s - 600°/s*/
+    eGamingRate = 1, /**< Gesture Update Rate is 240HZ,Gesture speed is 60°/s - 1200°/s*/
   }eRateMode_t;
 
   typedef struct{
-    eGesture_t gesture;
-    const char * description;
+    eGesture_t gesture; /**< 手势X */
+    const char * description; /**< 手势X对应的文字描述 */
   }sGestureDescription_t;
 
 public:
@@ -130,12 +130,31 @@ public:
    */
   int begin(void);
 
+  /**
+   * @brief 设置模块速率模式，当前此API未启用
+   * @param mode 用户配置的模式，可以是eNormalRate 或 eGamingRate
+   * @return 返回0表示设置成功，返回其他值表示设置失败
+   */
   int setNormalOrGamingMode(eRateMode_t mode);
+
+  /**
+   * @brief 设置告诉手势识别模式
+   * @param b true表示配置为高速识别模式，以最快速度识别手势并返回。false表示低速模式，在低速模式下，系统会做更多的判断
+   * @n   在高速识别模式下，可以快速识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个动作 高级用户如果想要用这些动作的组合，需要在外部自己算法逻辑，比如左右左快速挥手，因为每个人用到的动作有限 ，在高速模式下，我们没有将更多的扩展动作集在库中，需要用户在ino文件中自己完成算法逻辑
+   *
+   * @n   在低速识别模式下，每2秒识别一个动作，我们将一些扩展动作集成到库内部，方便基础用户使用，可以识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个基础动作 左右慢挥手 上下慢挥手 前后慢挥手 乱序慢挥手  4个扩展动作 
+   */
   void setGestureHighRate(bool b);
+
+  /**
+   * @brief 获取手势号码对应的字符串描述
+   * @param gesture 包含在eGesture_t中的手势号码
+   * @return 手势号码对应的文字描述信息，如果输入了手势表中不存在的手势，返回空字符串
+   */
   String gestureDescription(eGesture_t gesture);
   /**
    * @brief 获取手势
-   * @return 返回手势
+   * @return 返回手势，可能是eGesture_t中除了eGestureAll以外的任何值
    */
   eGesture_t getGesture(void);
 

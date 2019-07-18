@@ -79,7 +79,7 @@ DFRobot_PAJ7620U2::eGesture_t DFRobot_PAJ7620U2::getGesture(void)
     }
     if (_gesture != eGestureNone){
       DBG("");
-      switch (_gesture)   // When different gestures be detected, the variable '_gesture' will be set to different 
+      switch (_gesture)
       {
         case eGestureRight:
           DBG("Right Event Detected");
