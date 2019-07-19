@@ -4,10 +4,11 @@
  *
  * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
- * @author [Ouki](ouki.wang@dfrobot.com)
+ * @author      Alexander(ouki.wang@dfrobot.com)
  * @version  V1.0
  * @date  2019-07-15
- * @https://github.com/DFRobot/DFRobot_PAJ7620U2
+ * @get from https://www.dfrobot.com
+ * @url https://github.com/DFRobot/DFRobot_PAJ7620U2
  */
 #include <DFRobot_PAJ7620U2.h>
 
@@ -21,7 +22,7 @@ int DFRobot_PAJ7620U2::begin(void)
 {
   uint16_t partid;
   Wire.begin();
-  selectBank(eBank0);  //gesture flag reg in Bank0
+  selectBank(eBank0);
   if(readReg(PAJ7620_ADDR_PART_ID_LOW, &partid, 2) == 0){
     DBG("bus data access error");
     return ERR_DATA_BUS;
@@ -34,7 +35,7 @@ int DFRobot_PAJ7620U2::begin(void)
   for (int i = 0; i < sizeof(initRegisterArray)/sizeof(initRegisterArray[0]); i++) {
     writeReg(initRegisterArray[i][0], &initRegisterArray[i][1],1);
   }
-  selectBank(eBank0);  //gesture flag reg in Bank0
+  selectBank(eBank0);
   return ERR_OK;
 }
 

@@ -4,12 +4,13 @@
  * @n 在传感器上方0-20cm的距离内挥手，传感器能识别到向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手9种基础动作
  * @n 更多使用方式，详见setup函数中对setGestureHighRate函数的说明
  *
- * @copyright	Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
- * @author [ouki](ouki.wang@dfrobot.com)
+ * @author      Alexander(ouki.wang@dfrobot.com)
  * @version  V1.0
  * @date  2019-07-16
- * @https://github.com/DFRobot/DFRobot_PAJ7620U2
+ * @get from https://www.dfrobot.com
+ * @url https://github.com/DFRobot/DFRobot_PAJ7620U2
  */
  
 #include <DFRobot_PAJ7620U2.h>

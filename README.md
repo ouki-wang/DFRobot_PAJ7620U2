@@ -45,18 +45,18 @@ To use this library, first download the library file, paste it into the \Arduino
   int begin(void);
 
   /**
-   * @brief 设置模块速率模式，当前此API未启用
-   * @param mode 用户配置的模式，可以是eNormalRate 或 eGamingRate
-   * @return 返回0表示设置成功，返回其他值表示设置失败
-   */
-  int setNormalOrGamingMode(eRateMode_t mode);
-
-  /**
    * @brief 设置告诉手势识别模式
-   * @param b true表示配置为高速识别模式，以最快速度识别手势并返回。false表示低速模式，在低速模式下，系统会做更多的判断
-   * @n   在高速识别模式下，可以快速识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个动作 高级用户如果想要用这些动作的组合，需要在外部自己算法逻辑，比如左右左快速挥手，因为每个人用到的动作有限 ，在高速模式下，我们没有将更多的扩展动作集在库中，需要用户在ino文件中自己完成算法逻辑
-   *
-   * @n   在低速识别模式下，每2秒识别一个动作，我们将一些扩展动作集成到库内部，方便基础用户使用，可以识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个基础动作 左右慢挥手 上下慢挥手 前后慢挥手 乱序慢挥手  4个扩展动作 
+   * @param b true表示配置为高速识别模式，以最快速度识别手势并返回。
+   * @n  false表示低速模式，在低速模式下，系统会做更多的判断
+   * @n  在高速识别模式下，可以快速识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 
+   * @n  向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个动作
+   * @n  高级用户如果想要用这些动作的组合，需要在外部自己算法逻辑，比如左右左快速挥手
+   * @n  因为每个人用到的动作有限 ，我们没有将更多的扩展动作集在库中，需要用户在ino文件中自己完成算法逻辑
+   * @n
+   * @n
+   * @n  在低速识别模式下，每2秒识别一个动作，我们将一些扩展动作集成到库内部，方便基础用户使用
+   * @n  可以识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 
+   * @n  逆时针 顺时针 快速挥手 9个基础动作 左右慢挥手 上下慢挥手 前后慢挥手 乱序慢挥手  4个扩展动作 
    */
   void setGestureHighRate(bool b);
 
@@ -71,7 +71,6 @@ To use this library, first download the library file, paste it into the \Arduino
    * @return 返回手势，可能是eGesture_t中除了eGestureAll以外的任何值
    */
   eGesture_t getGesture(void);
-
 ```
 
 ## Compatibility

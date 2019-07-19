@@ -4,12 +4,13 @@
  * @n 在20秒钟内输入手势密码，如果正确，则进入系统，否则继续等待用户输入密码
  * @n 超时时间可以通过更改TIMEOUT宏来调节，单位是毫秒
  *
- * @copyright	Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @licence     The MIT License (MIT)
- * @author [ouki](ouki.wang@dfrobot.com)
+ * @author      Alexander(ouki.wang@dfrobot.com)
  * @version  V1.0
  * @date  2019-07-16
- * @https://github.com/DFRobot/DFRobot_PAJ7620U2
+ * @get from https://www.dfrobot.com
+ * @url https://github.com/DFRobot/DFRobot_PAJ7620U2
  */
  
 #include <DFRobot_PAJ7620U2.h>
@@ -60,7 +61,7 @@ void loop()
    */
   DFRobot_PAJ7620U2::eGesture_t gesture;
   uint8_t pdLen = sizeof(password)/sizeof(password[0]);
-  Serial.print("pdLen=");Serial.println(pdLen);
+  Serial.print("密码长度=");Serial.println(pdLen);
   unsigned long startTimeStamp = millis();
   Serial.print("请输入第 "); Serial.print(index+1); Serial.println(" 个手势");
   do{
