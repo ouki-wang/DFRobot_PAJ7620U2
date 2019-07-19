@@ -172,7 +172,7 @@ private:
    * @param pBuf 要写入数据的存放缓存
    * @param size 要写入数据的长度
    */
-  void writeReg(uint8_t reg, void* pBuf, size_t size);
+  void writeReg(uint8_t reg, const void* pBuf, size_t size);
 
   /**
    * @brief 读取寄存器函数
