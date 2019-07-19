@@ -1,5 +1,5 @@
 # DFRobot_Sensor
-这里写模块介绍介绍，做到读完这段，就能对模块有初步了解，让客户懂的用这个模块能干什么<br>
+The PAJ7620 integrates gesture recognition function with general I2C interface into a single chip forming an image analytic sensor system. It can recognize 9 human hand gesticulations such as moving up, down, left, right, forward, backward, circle-clockwise, circle-counter Key Parameters clockwise, and waving. It also offers built-in proximity detection in sensing approaching or departing object from the sensor. The PAJ7620 is packaged into module form in-built with IR LED and optics lens as a complete sensor solution<br>
 
 这里需要显示拍照图片，可以一张图片，可以多张图片（不要用SVG图）
 
@@ -20,7 +20,10 @@
 
 ## Summary
 
-这里填写当前Arduino软件库完成了哪些功能
+这个Arduino库，我们实现了PAJ7620手势传感器的基础功能，你可以在内置的examples中体验这些功能
+  1. 快速模式下，读取9种手势的功能
+  2. 慢速模式下，读取9中基础手势和4中扩展手势的功能
+  3. 基于快速模式，我们做了一个手势序列识别的例子，我们称之为手势密码
 
 ## Installation
 
@@ -30,44 +33,45 @@ To use this library, first download the library file, paste it into the \Arduino
 
 ```C++
   /**
+   * @brief 构造函数
+   * @param mode 构造设备时，可以指定它的默认工作模式
+   */
+  DFRobot_PAJ7620U2(TwoWire *pWire=&Wire);
+
+  /**
    * @brief 初始化函数
    * @return 返回0表示初始化成功，返回其他值表示初始化失败
    */
   int begin(void);
-  
-  /**
-   * @brief 获取声音强度值
-   * @return 返回声音强度，单位是DB
-   */
-  uint16_t getSoundStrength(void);
 
   /**
-   * @brief 获取光线强度值
-   * @return 返回光线强度，单位是流明
+   * @brief 设置模块速率模式，当前此API未启用
+   * @param mode 用户配置的模式，可以是eNormalRate 或 eGamingRate
+   * @return 返回0表示设置成功，返回其他值表示设置失败
    */
-  uint16_t getLightStrength(void);
-  
-    /**
-   * @brief 切换模式
-   * @return 返回0操作成功, 返回其他值操作失败
-   */
+  int setNormalOrGamingMode(eRateMode_t mode);
 
-  uint8_t switchMode(uint8_t mode);
   /**
-   * @brief 设置LED灯的颜色
-     @note  设置颜色后，0.2秒后生效
-   * @param r 红色通道颜色值，范围0-255
-   * @param g 绿色通道颜色值，范围0-255
-   * @param b 蓝色通道颜色值，范围0-255
+   * @brief 设置告诉手势识别模式
+   * @param b true表示配置为高速识别模式，以最快速度识别手势并返回。false表示低速模式，在低速模式下，系统会做更多的判断
+   * @n   在高速识别模式下，可以快速识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个动作 高级用户如果想要用这些动作的组合，需要在外部自己算法逻辑，比如左右左快速挥手，因为每个人用到的动作有限 ，在高速模式下，我们没有将更多的扩展动作集在库中，需要用户在ino文件中自己完成算法逻辑
+   *
+   * @n   在低速识别模式下，每2秒识别一个动作，我们将一些扩展动作集成到库内部，方便基础用户使用，可以识别的动作包括向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手 9个基础动作 左右慢挥手 上下慢挥手 前后慢挥手 乱序慢挥手  4个扩展动作 
    */
-   void setLED(uint8_t r, uint8_t g, uint8_t b);
+  void setGestureHighRate(bool b);
 
-   /**
-   * @brief 设置LED灯的颜色
-     @note  设置颜色后，0.2秒后生效
-   * @param color rgb565格式的颜色值
+  /**
+   * @brief 获取手势号码对应的字符串描述
+   * @param gesture 包含在eGesture_t中的手势号码
+   * @return 手势号码对应的文字描述信息，如果输入了手势表中不存在的手势，返回空字符串
    */
-   void setLED(uint16_t color);
+  String gestureDescription(eGesture_t gesture);
+  /**
+   * @brief 获取手势
+   * @return 返回手势，可能是eGesture_t中除了eGestureAll以外的任何值
+   */
+  eGesture_t getGesture(void);
+
 ```
 
 ## Compatibility
@@ -77,20 +81,16 @@ MCU                | Work Well    | Work Wrong   | Untested    | Remarks
 Arduino uno        |      √       |              |             | 
 Mega2560        |      √       |              |             | 
 Leonardo        |      √       |              |             | 
-ESP32        |      √       |              |             | 
-
+mPython/ESP32   |      √       |              |             | 
+Microbit        |      √       |              |             | 
 
 ## History
 
-- data 2019-6-25
-- version V0.1
+- data 2019-7-16
+- version V1.0
 
 
 ## Credits
 
-Written by(ouki.wang@dfrobot.com), 2019. (Welcome to our [website](https://www.dfrobot.com/))
-
-
-
-
+Written by Alexander(ouki.wang@dfrobot.com), 2019. (Welcome to our [website](https://www.dfrobot.com/))
 
