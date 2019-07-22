@@ -22,7 +22,7 @@ DFRobot_PAJ7620U2 paj;
 DFRobot_PAJ7620U2::eGesture_t password[]={DFRobot_PAJ7620U2::eGestureUp,DFRobot_PAJ7620U2::eGestureUp,DFRobot_PAJ7620U2::eGestureDown,DFRobot_PAJ7620U2::eGestureDown,\
   DFRobot_PAJ7620U2::eGestureLeft,DFRobot_PAJ7620U2::eGestureLeft,DFRobot_PAJ7620U2::eGestureRight,DFRobot_PAJ7620U2::eGestureRight};
 
-uint8_t index = 0;     //已经输入正确密码的个数
+static uint8_t index = 0;     //已经输入正确密码的个数
 bool correct = false;  //密码是否已经输入正确
 #define TIMEOUT 20000 //输入密码超时时间，单位是毫秒
 
