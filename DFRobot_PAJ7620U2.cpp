@@ -41,7 +41,7 @@ int DFRobot_PAJ7620U2::begin(void)
 
 int DFRobot_PAJ7620U2::setNormalOrGamingMode(eRateMode_t mode)
 {
-
+    return 0;
 }
 
 String DFRobot_PAJ7620U2::gestureDescription(eGesture_t gesture)
