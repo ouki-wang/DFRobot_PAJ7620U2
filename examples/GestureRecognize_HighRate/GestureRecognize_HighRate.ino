@@ -1,5 +1,5 @@
 /*!
- * @file 9Gestures.ino
+ * @file GestureRecognize_HighRate.ino
  * @brief 展示传感器内置支持的9种手势数据
  * @n 在传感器上方0-20cm的距离内挥手，传感器能识别到向左滑动 向右滑动 向上滑动 向下滑动 向前滑动 向后滑动 逆时针 顺时针 快速挥手9种基础动作
  * @n 更多使用方式，详见setup函数中对setGestureHighRate函数的说明
