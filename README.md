@@ -71,9 +71,10 @@ To use this library, first download the library file, paste it into the \Arduino
   String gestureDescription(eGesture_t gesture);
   /**
    * @brief 获取手势
-   * @return 返回手势，可能是的值为eGestureNone  eGestureRight  eGestureLeft  eGestureUp  eGestureDown  eGestureForward
-   * @n     eGestureBackward  eGestureClockwise  eGestureAntiClockwise  eGestureWave  eGestureWaveSlowlyDisorder 
-   * @n     eGestureWaveSlowlyLeftRight  eGestureWaveSlowlyUpDown  eGestureWaveSlowlyForwardBackward
+   * @return 返回手势，可能是的值为eGestureNone  eGestureRight  eGestureLeft  eGestureUp  
+   * @n     eGestureDown  eGestureForward  eGestureBackward  eGestureClockwise
+   * @n     eGestureWave  eGestureWaveSlowlyDisorder  eGestureWaveSlowlyLeftRight  
+   * @n     eGestureWaveSlowlyUpDown  eGestureWaveSlowlyForwardBackward
    */
   eGesture_t getGesture(void);
 ```
