@@ -64,8 +64,9 @@ To use this library, first download the library file, paste it into the \Arduino
    * @brief 获取手势号码对应的字符串描述
    * @param gesture 包含在eGesture_t中的手势号码
    * @return 手势号码对应的文字描述信息，如果输入了手势表中不存在的手势，返回空字符串
-   * @n 正常的返回值可能是   "None","Right","Left", "Up", "Down", "Forward", "Backward", "Clockwise", "Anti-Clockwise", "Wave",
-    * "WaveSlowlyDisorder", "WaveSlowlyLeftRight", "WaveSlowlyUpDown", "WaveSlowlyForwardBackward"
+   * @n 正常的返回值可能是   "None","Right","Left", "Up", "Down", "Forward", "Backward", "Clockwise",
+   * @n "Anti-Clockwise", "Wave", "WaveSlowlyDisorder", "WaveSlowlyLeftRight", "WaveSlowlyUpDown",
+   * @n "WaveSlowlyForwardBackward"
    */
   String gestureDescription(eGesture_t gesture);
   /**
